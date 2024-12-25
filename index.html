@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Просмотр занятости заведения общественного питания</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            line-height: 1.6;
+        }
+        header {
+            background: #03e2ff;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        input[type="date"], input[type="time"], input[type="number"], select {
+            width: calc(25% - 12px);
+            margin: 10px 0;
+            padding: 8px;
+            border: 1px solid #03e2ff;
+            border-radius: 100px;
+        }
+        button {
+            background-color: #03e2ff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #03e2ff;
+        }
+        #successMessage {
+            color: #03e2ff;
+            display: none;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Заведение общественного питания</h1>
+    <nav>
+        <a href="about.html">О нас</a>
+        <a href="contact.html">Контакты</a>
+    </nav>
+</header>
+
+<h1>Создать новую бронь</h1>
+    <input type="date" id="dateInput" placeholder="Дата">
+    <input type="time" id="timeInput" placeholder="Время">
+    <input type="number" id="guestsInput" placeholder="Количество гостей" min="1" max="4">
+    <select id="tableInput">
+        <option value="">Выберите столик</option>
+        <option value="1">Столик 1</option>
+        <option value="2">Столик 2</option>
+        <option value="3">Столик 3</option>
+        <option value="4">Столик 4</option>
+        <option value="5">Столик 5</option>
+        <option value="6">Столик 6</option>
+        <option value="7">Столик 7</option>
+        <option value="8">Столик 8</option>
+        <option value="9">Столик 9</option>
+        <option value="10">Столик 10</option>
+    </select>
+    <button onclick="addBooking()">Добавить бронь</button>
+    <div id="successMessage">Бронь успешно добавлена!</div>
+
+<h2>Список броней</h2>
+    <ul id="bookingList"></ul>
+
+<script>
+    let bookings = [];
+
+    function addBooking() {
+        const date = document.getElementById("dateInput").value;
+        const time = document.getElementById("timeInput").value;
+        const guests = parseInt(document.getElementById("guestsInput").value, 10);
+        const table = document.getElementById("tableInput").value;
+
+        if (date && time && guests && table) {
+            if (guests < 1 || guests > 4) {
+                alert("Количество гостей должно быть от 1 до 4.");
+                return;
+            }
+
+            const isDuplicate = bookings.some(booking => booking.date === date && booking.time === time && booking.table === table);
+            if (isDuplicate) {
+                alert("Бронь на этот столик уже существует на указанное время.");
+                return;
+            }
+
+            const booking = { date, time, guests, table };
+            bookings.push(booking);
+            displayBookings();
+            showSuccessMessage();
+            clearInputs();
+        } else {
+            alert("Пожалуйста, заполните все поля!");
+        }
+    }
+
+    function displayBookings() {
+        const bookingList = document.getElementById("bookingList");
+        bookingList.innerHTML = '';
+
+        bookings.forEach((booking) => {
+            const li = document.createElement("li");
+            li.textContent = `Дата: ${booking.date}, Время: ${booking.time}, Гостей: ${booking.guests}, Столик: ${booking.table}`;
+            bookingList.appendChild(li);
+        });
+    }
+
+    function showSuccessMessage() {
+        const successMessage = document.getElementById("successMessage");
+        successMessage.style.display = 'block';
+        setTimeout(() => {
+            successMessage.style.display = 'none';
+        }, 2000);
+    }
+
+    function clearInputs() {
+        document.getElementById("dateInput").value = '';
+        document.getElementById("timeInput").value = '';
+        document.getElementById("guestsInput").value = '';
+        document.getElementById("tableInput").value = '';
+    }
+</script>
+
+<footer>
+    <p>Для бронирования мест, больше, чем на 4 человек, обращаться по телефону или почте</p>
+</footer>
+
+</body>
+</html>
